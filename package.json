@@ -1,0 +1,11 @@
+{
+  "name": "projeto-empresa",
+  "version": "1.0.0",
+  "description": "Script para rodar o front e o backend do projeto",
+  "scripts": {
+    "empresa": "(cd api && node index.js) & (cd front && npm run serve)"
+  },
+  "keywords": [],
+  "author": "Isaac Kennedy <isaac_kennedy@hotmail.com>",
+  "license": "MIT"
+}
