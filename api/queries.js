@@ -1,12 +1,18 @@
-import { Pool } from 'pg';
+import pool from './dbPool';
 
-const pool = new Pool({
-  user: 'isaac',
-  host: 'localhost',
-  database: 'empresa_api',
-  password: 'abcd1234',
-  port: 5432,
-});
+const getEmpregadoById = (request, response) => {
+  const idEmpregado = request.params.id;
+
+  pool.query('SELECT * FROM Empregado WHERE codigo = $1', [idEmpregado],
+    (error, result) => {
+      if (error) {
+        response.status(500).send(error);
+        console.log(error);
+      }
+
+      response.status(200).json(result.rows);
+    });
+};
 
 const getEmpregados = (request, response) => {
   pool.query('SELECT * FROM Empregado ORDER BY nome',
@@ -82,6 +88,20 @@ const updateEmpregado = (request, response) => {
   });
 };
 
+const getDependentesByEmpregado = (request, response) => {
+  const idEmpregado = request.params.id;
+
+  pool.query('SELECT * FROM Dependente WHERE empregado = $1', [idEmpregado],
+    (error, results) => {
+      if (error) {
+        response.status(500).json(error);
+        console.log(error);
+      }
+
+      response.status(200).json(results.rows);
+    });
+};
+
 const getDependentes = (request, response) => {
   pool.query('SELECT * FROM Dependente ORDER BY nome',
     (error, results) => {
@@ -151,6 +171,20 @@ const updateDependente = (request, response) => {
   });
 };
 
+const getDepartamentoById = (request, response) => {
+  const idDepartamento = request.params.id;
+
+  pool.query('SELECT * FROM Departamento WHERE codigo = $1', [idDepartamento],
+    (error, result) => {
+      if (error) {
+        response.status(500).json(error);
+        console.log(error);
+      }
+
+      response.status(200).json(result.rows);
+    });
+};
+
 const getDepartamentos = (request, response) => {
   pool.query('SELECT * FROM Departamento ORDER BY nome',
     (error, results) => {
@@ -214,6 +248,20 @@ const updateDepartamento = (request, response) => {
   });
 };
 
+const getLocaisByDepartamento = (request, response) => {
+  const idDepartamento = request.params.id;
+
+  pool.query('SELECT * FROM Local WHERE departamento = $1', [idDepartamento],
+    (error, results) => {
+      if (error) {
+        response.status(500).json(error);
+        console.log(error);
+      }
+
+      response.status(200).json(results.rows);
+    });
+};
+
 const getLocais = (request, response) => {
   pool.query('SELECT * FROM Local ORDER BY nome',
     (error, results) => {
@@ -255,6 +303,20 @@ const deleteLocal = (request, response) => {
 
       console.log(results);
       response.status(200).send(`Local ${nome} deletado!`);
+    });
+};
+
+const getProjetoById = (request, response) => {
+  const idProjeto = request.params.id;
+
+  pool.query('SELECT * FROM Projeto WHERE codigo = $1', [idProjeto],
+    (error, result) => {
+      if (error) {
+        response.status(500).json(error).send();
+        console.log(error);
+      }
+
+      response.status(200).json(result.rows);
     });
 };
 
@@ -322,24 +384,46 @@ const deleteProjeto = (request, response) => {
     });
 };
 
+const delegarEmpregadoProjeto = (request, response) => {
+  const { idEmpregado, idProjeto, horas } = request.body;
+
+  pool.query('INSERT INTO Trabalhaem (empregado, projeto, horas) VALUES ($1, $2, $3)',
+    [idEmpregado, idProjeto, horas],
+    (error, result) => {
+      if (error) {
+        response.status(500).json(error).send();
+        console.log(error);
+      }
+
+      console.log(result);
+      response.status(200).send(`Empregado código ${idEmpregado} delegado ao projeto ${idProjeto}!`);
+    });
+};
+
 export default {
+  getEmpregadoById,
   createEmpregado,
   deleteEmpregado,
   getEmpregados,
   updateEmpregado,
   getDependentes,
+  getDependentesByEmpregado,
   createDependente,
   deleteDependente,
   updateDependente,
+  getDepartamentoById,
   getDepartamentos,
   createDepartamento,
   deleteDepartamento,
   updateDepartamento,
+  getLocaisByDepartamento,
   getLocais,
   deleteLocal,
   createLocal,
+  getProjetoById,
   getProjetos,
   createProjeto,
   updateProjeto,
   deleteProjeto,
+  delegarEmpregadoProjeto,
 };
