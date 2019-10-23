@@ -1,0 +1,238 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API para o banco de dados da empresa criada para a prova da primeira unidade.",
+    "version": "1.0.0",
+    "title": "API Empresa",
+    "contact": {
+      "email": "isaac_kennedy@hotmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Empregados",
+      "description": "Dados sobre os empregados da empresa"
+    },
+    {
+      "name": "Dependentes",
+      "description": "Informações sobre os dependentes dos empregados da empresa"
+    }
+  ],
+  "paths": {
+    "/empregados": {
+      "post": {
+        "tags": [
+          "Empregados"
+        ],
+        "summary": "Insere um novo empregado no banco.",
+        "description": "",
+        "operationId": "createEmpregado",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "empregado",
+            "description": "Dados do empregado que seŕa inserido no banco",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Empregado"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário criado com sucesso!"
+          },
+          "400": {
+            "description": "Dados inválidos!"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Empregados"
+        ],
+        "summary": "Busca uma lista de todos os empregados",
+        "description": "",
+        "operationId": "getEmpregados",
+        "produces": [
+          "application/json",
+          "text/plain;charset=UTF-8"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Empregado"
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      }
+    },
+    "/empregados/{id}": {
+      "get": {
+        "tags": [
+          "Empregados"
+        ],
+        "summary": "Busca um único empregado através do seu ID",
+        "description": "",
+        "produces": [
+          "application/json",
+          "text/plain;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do funcionário que será retornado",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Opreação realizada!",
+            "schema": {
+              "$ref": "#/definitions/Empregado"
+            }
+          },
+          "404": {
+            "description": "Empregado não encontrado!"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Empregados"
+        ],
+        "summary": "Atualiza os dados de um empregado",
+        "description": "",
+        "produces": [
+          "text/plain;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do funcionário que será atualizado",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "empregado",
+            "in": "body",
+            "description": "Dados que se quer alterar do empregado no banco",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Empregado"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Empregado não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Empregados"
+        ],
+        "summary": "Exclui um empregado do banco",
+        "description": "",
+        "produces": [
+          "text/plain;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do funcionário que será excluído",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada!"
+          },
+          "404": {
+            "description": "Empregado não encontrado!"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Empregado": {
+      "type": "object",
+      "properties": {
+        "codigo": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nome": {
+          "type": "string"
+        },
+        "nomedomeio": {
+          "type": "string"
+        },
+        "sobrenome": {
+          "type": "string"
+        },
+        "dtnascimento": {
+          "type": "string",
+          "format": "date"
+        },
+        "endereco": {
+          "type": "string"
+        },
+        "sexo": {
+          "type": "string",
+          "enum": [
+            "M",
+            "F"
+          ]
+        },
+        "salario": {
+          "type": "number",
+          "format": "float"
+        },
+        "gerente": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "xml": {
+        "name": "Empregado"
+      }
+    }
+  }
+}

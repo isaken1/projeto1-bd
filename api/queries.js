@@ -1,4 +1,4 @@
-import pool from './dbPool';
+const { pool } = require('./dbPool');
 
 const getEmpregadoById = (request, response) => {
   const idEmpregado = request.params.id;
@@ -7,7 +7,7 @@ const getEmpregadoById = (request, response) => {
     (error, result) => {
       if (error) {
         response.status(500).send(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(result.rows);
@@ -19,7 +19,7 @@ const getEmpregados = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).send(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(results.rows);
@@ -40,7 +40,7 @@ const createEmpregado = (request, response) => {
   (error, result) => {
     if (error) {
       response.status(500).send(error);
-      console.log(error);
+      throw error;
     }
 
     console.log(result);
@@ -56,7 +56,7 @@ const deleteEmpregado = (request, response) => {
     (error, result) => {
       if (error) {
         response.status(500).send(error);
-        console.log(error);
+        throw error;
       }
 
       console.log(result);
@@ -79,8 +79,8 @@ const updateEmpregado = (request, response) => {
     sexo, salario, gerente, departamento, id],
   (error, result) => {
     if (error) {
-      response.status(500).json(error);
-      console.log(error);
+      response.status(404).json(error);
+      throw error;
     }
 
     console.log(result);
@@ -95,7 +95,7 @@ const getDependentesByEmpregado = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(results.rows);
@@ -107,7 +107,7 @@ const getDependentes = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(results.rows);
@@ -125,7 +125,7 @@ const createDependente = (request, response) => {
   (error, result) => {
     if (error) {
       response.status(500).send(error);
-      console.log(error);
+      throw error;
     }
 
     console.log(result);
@@ -143,7 +143,7 @@ const deleteDependente = (request, response) => {
     (error, result) => {
       if (error) {
         response.status(500).send(error);
-        console.log(error);
+        throw error;
       }
 
       console.log(result);
@@ -163,7 +163,7 @@ const updateDependente = (request, response) => {
   (error, result) => {
     if (error) {
       response.status(500).json(error);
-      console.log(error);
+      throw error;
     }
 
     console.log(result);
@@ -178,7 +178,7 @@ const getDepartamentoById = (request, response) => {
     (error, result) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(result.rows);
@@ -190,7 +190,7 @@ const getDepartamentos = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(results.rows);
@@ -207,7 +207,7 @@ const createDepartamento = (request, response) => {
   (error, result) => {
     if (error) {
       response.status(500).json(error);
-      console.log(error);
+      throw error;
     }
 
     console.log(result);
@@ -222,7 +222,7 @@ const deleteDepartamento = (request, response) => {
     (error, result) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       console.log(result);
@@ -240,7 +240,7 @@ const updateDepartamento = (request, response) => {
   (error, result) => {
     if (error) {
       response.status(500).json(error);
-      console.log(error);
+      throw error;
     }
 
     console.log(result);
@@ -255,7 +255,7 @@ const getLocaisByDepartamento = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(results.rows);
@@ -267,7 +267,7 @@ const getLocais = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(results.rows);
@@ -282,7 +282,7 @@ const createLocal = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       console.log(results);
@@ -298,7 +298,7 @@ const deleteLocal = (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json(error);
-        console.log(error);
+        throw error;
       }
 
       console.log(results);
@@ -313,7 +313,7 @@ const getProjetoById = (request, response) => {
     (error, result) => {
       if (error) {
         response.status(500).json(error).send();
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(result.rows);
@@ -321,11 +321,11 @@ const getProjetoById = (request, response) => {
 };
 
 const getProjetos = (request, response) => {
-  pool.query('SELECT * FROM Projeto ORDER BY nome',
+  pool.query('SELECT * FROM Projeto ORDER BY codigo',
     (error, results) => {
       if (error) {
         response.status(500).json(error).send();
-        console.log(error);
+        throw error;
       }
 
       response.status(200).json(results.rows);
@@ -343,7 +343,7 @@ const createProjeto = (request, response) => {
   (error, results) => {
     if (error) {
       response.status(500).json(error).send();
-      console.log(error);
+      throw error;
     }
 
     console.log(results);
@@ -361,7 +361,7 @@ const updateProjeto = (request, response) => {
   (error, result) => {
     if (error) {
       response.status(500).json(error).send();
-      console.log(error);
+      throw error;
     }
 
     console.log(result);
@@ -400,7 +400,7 @@ const delegarEmpregadoProjeto = (request, response) => {
     });
 };
 
-export default {
+module.exports = {
   getEmpregadoById,
   createEmpregado,
   deleteEmpregado,
