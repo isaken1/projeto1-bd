@@ -32,14 +32,16 @@ const createEmpregado = (request, response) => {
     sexo, salario, gerente, departamento,
   } = request.body;
 
+  console.log(request.body);
+
   pool.query('INSERT INTO Empregado (nome, nomedomeio, sobrenome, '
-        + 'codigo, dtNascimento, endereco, sexo, salario, gerente, '
-        + 'departamento) VALUES $1, $2, $3, $4, $5, $6, $7, $8, $9, $10',
-  [nome, nomedomeio, sobrenome, codigo, dtnascimento, endereco,
-    sexo, salario, gerente, departamento],
+        + 'codigo, dtnascimento, endereco, sexo, salario, gerente, '
+        + 'departamento) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING codigo',
+  [nome, nomedomeio, sobrenome, parseInt(codigo, 10), dtnascimento, endereco,
+    sexo, parseFloat(salario) || "", gerente || "", parseInt(departamento, 10) || ""],
   (error, result) => {
     if (error) {
-      response.status(500).send(error);
+      response.status(400).send(error);
       throw error;
     }
 
@@ -50,7 +52,7 @@ const createEmpregado = (request, response) => {
 };
 
 const deleteEmpregado = (request, response) => {
-  const idEmpregado = parseInt(request.params.id, 10);
+  const idEmpregado = request.params.id;
 
   pool.query('DELETE FROM Empregado WHERE codigo = $1', [idEmpregado],
     (error, result) => {
@@ -65,18 +67,18 @@ const deleteEmpregado = (request, response) => {
 };
 
 const updateEmpregado = (request, response) => {
-  const id = parseInt(request.params.id, 10);
-
+  const id = request.params.id;
+  console.log(request.body);
   const {
-    nome, nomeDoMeio, sobrenome, dtNascimento,
+    nome, nomedomeio, sobrenome, dtnascimento,
     endereco, sexo, salario, gerente, departamento,
   } = request.body;
 
   pool.query('UPDATE Empregado SET nome = $1, nomedomeio = $2, '
-        + 'sobrenome = $3, dtNascimento = $4, endereco = $5, sexo = $6, '
+        + 'sobrenome = $3, dtnascimento = $4, endereco = $5, sexo = $6, '
         + 'salario = $7, gerente = $8, departamento = $9 WHERE codigo = $10',
-  [nome, nomeDoMeio, sobrenome, dtNascimento, endereco,
-    sexo, salario, gerente, departamento, id],
+  [nome, nomedomeio, sobrenome, dtnascimento, endereco,
+    sexo, salario, gerente || "", departamento || "", id],
   (error, result) => {
     if (error) {
       response.status(404).json(error);
@@ -116,11 +118,11 @@ const getDependentes = (request, response) => {
 
 const createDependente = (request, response) => {
   const {
-    empregado, nome, sexo, dtNascimento, parentesco,
+    empregado, nome, sexo, dtnascimento, parentesco,
   } = request.body;
 
-  pool.query('INSERT INTO Dependente  (nome, dtNascimento, sexo, parentesco, empregado)'
-        + ' VALUES $1, $2, $3, $4, $5',
+  pool.query('INSERT INTO Dependente  (nome, dtNascimento, sexo, parentesco, empregado) RETURNING nome'
+        + ' VALUES ($1, $2, $3, $4, $5)',
   [nome, dtNascimento, sexo, parentesco, empregado],
   (error, result) => {
     if (error) {
@@ -129,8 +131,7 @@ const createDependente = (request, response) => {
     }
 
     console.log(result);
-    response.status(201).send(`Dependente criado com o ID:
-                ${result.insertId}`);
+    response.status(201).send(`Dependente ${result.insertId} criado!`);
   });
 };
 
@@ -138,7 +139,7 @@ const deleteDependente = (request, response) => {
   const idEmpregado = parseInt(request.params.id, 10);
   const nomeDependente = request.params.nome;
 
-  pool.query('DELETE FROM Dependente WHERE idEmpregado = $1 AND nomeDependente = $2',
+  pool.query('DELETE FROM Dependente WHERE empregado = $1 AND nome = $2',
     [idEmpregado, nomeDependente],
     (error, result) => {
       if (error) {

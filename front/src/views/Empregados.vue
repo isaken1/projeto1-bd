@@ -10,7 +10,8 @@
       </b-card-header>
 
       <b-card-body>
-        <router-view :empregados="empregado_list" />
+        <router-view @empregadoDeletado="fetchData" @empregadoAtualizado="fetchData"
+         :empregados="empregado_list" />
       </b-card-body>
   </b-card>
 </template>
@@ -30,6 +31,11 @@ export default {
       this.$http.get('/empregados').then((response) => {
         if (response.status === 200) {
           this.empregado_list = response.data;
+          this.empregado_list.map((empregado) => {
+            const newEmpregado = Object.assign({}, empregado);
+            newEmpregado.dtnascimento = empregado.dtnascimento.slice(0, empregado.dtnascimento.indexOf('T'));
+            return newEmpregado;
+          });
         }
       });
     },

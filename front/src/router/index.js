@@ -5,6 +5,10 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/',
+    redirect: '/home',
+  },
+  {
     path: '/home',
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
   },
@@ -15,11 +19,26 @@ const routes = [
       {
         path: 'list',
         props: true,
-        component: () => import(/* webpackChunkName: "listar" */ '../components/Empregados/List.vue'),
+        component: () => import(/* webpackChunkName: "listarEmprgs" */ '../components/Empregados/List.vue'),
       },
       {
         path: 'novo',
-        component: () => import(/* webpackChunkName: "novo" */ '../components/Empregados/New.vue'),
+        component: () => import(/* webpackChunkName: "novoEmprg" */ '../components/Empregados/New.vue'),
+      },
+    ],
+  },
+  {
+    path: '/dependentes',
+    component: () => import(/* webpackChunkName: "dependentes" */ '../views/Dependentes.vue'),
+    children: [
+      {
+        path: 'list',
+        props: true,
+        component: () => import(/* webpackChunkName: "listarDeps" */ '../components/Dependentes/List.vue'),
+      },
+      {
+        path: 'novo',
+        component: () => import(/* webpackChunkName: "novoDep" */ '../components/Dependentes/New.vue'),
       },
     ],
   },

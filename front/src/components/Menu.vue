@@ -5,6 +5,7 @@
 
       <b-navbar-nav>
         <b-nav-item to="/empregados">Empregados</b-nav-item>
+        <b-nav-item to="/dependentes">Dependentes</b-nav-item>
       </b-navbar-nav>
     </b-navbar>
   </div>
