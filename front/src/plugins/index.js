@@ -1,2 +1,2 @@
-import "./bootstrap-vue";
-import "./postgres";
+import './bootstrap-vue';
+import './axios';

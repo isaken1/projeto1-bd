@@ -1,7 +1,7 @@
 {
   "name": "projeto-empresa",
   "version": "1.0.0",
-  "description": "Script para rodar o front e o backend do projeto",
+  "description": "Front-end e back-end para o projeto da segunda lista da disciplina de banco de dados.",
   "scripts": {
     "api": "cd ./api && node index.js",
     "install": "(cd ./api && npm i) & (cd ./front && npm i)",

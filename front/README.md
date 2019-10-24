@@ -1,4 +1,4 @@
-# projeto-empresa
+# front
 
 ## Project setup
 ```

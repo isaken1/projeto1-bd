@@ -1,6 +1,8 @@
 const express = require('express');
 const { json, urlencoded } = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
+const cors = require('cors');
+
 const swaggerDocument = require('./swagger.json');
 const db = require('./queries');
 
@@ -9,6 +11,8 @@ const app = express();
 const port = 3000;
 
 app.use(json());
+app.use(cors());
+
 app.use(
   urlencoded({
     extended: true,
